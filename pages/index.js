@@ -1,25 +1,34 @@
 
+import React from "react";
 import config from "../config.json"
 import styled from "styled-components"
 import { CSSReset } from "../src/components/CSSReset";
-import Menu from "../src/components/Menu";
+import Menu from "../src/components/Menu/index.js";
 import { StyledTimeline } from "../src/components/Timeline";
 
 export default function Homepage() {
-
+    const [valorDaBusca, setvalorDaBusca] = React.useState('');
     return (
         <>
             <CSSReset/>
             <div>
-                <Menu/>
+                <Menu busca={valorDaBusca} setBusca={setvalorDaBusca} />
                 <Header/>
-                <Timeline playlists={config.playlists} />
+                <Timeline searchValue={valorDaBusca} playlists={config.playlists} />
             </div>
         </>
     )
 }
 
+const StyledBanner = styled.div`
+    background-color: gray;
+    background-image: url(https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80);
+    background-position: center center;
+    min-height: 230px;
+    height: 30vh;
+    width: 100%;
 
+`;
 
 const StyledHeader = styled.div`
     img {
@@ -28,7 +37,6 @@ const StyledHeader = styled.div`
         border-radius: 50%;
     }
     .user-info{
-        margin-top: 50px;
         display: flex;
         align-items: center;
         width: 100%;
@@ -41,7 +49,7 @@ const StyledHeader = styled.div`
 function Header() {
     return (
         <StyledHeader>
-            <img src="" alt="banner"/>
+            <StyledBanner/>
             <section className="user-info">
                 <img src={`https://github.com/${config.github}.png`} alt="foto-perfil"/>
                 <div>
@@ -57,7 +65,7 @@ function Header() {
     )
 }
 
-function Timeline(props) {
+function Timeline({searchValue, ...props}) {
 
     const playlistsNames = Object.keys(props.playlists)
 
@@ -69,14 +77,18 @@ function Timeline(props) {
                     <section>
                         <h2>{playlistsNames}</h2>
                         <div>
-                            {videos.map((video) => {
+                            {videos.filter((video) => {
+                                const titleNormalized = video.title.toLowerCase();
+                                const searchValueNormalized = searchValue.toLowerCase();
+                                return titleNormalized.includes(searchValueNormalized)
+                            }).map((video) => {
                                 return (
-                                <a href={video.url}>
-                                    <img src={video.thumb}/>
-                                    <span>
-                                        {video.title}
-                                    </span>
-                                </a>
+                                    <a href={video.url}>
+                                        <img src={video.thumb}/>
+                                        <span>
+                                            {video.title}
+                                        </span>
+                                    </a>
                                 )
                             })}
                         </div>
