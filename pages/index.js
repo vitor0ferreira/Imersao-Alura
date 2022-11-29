@@ -2,7 +2,6 @@
 import React from "react";
 import config from "../config.json"
 import styled from "styled-components"
-import { CSSReset } from "../src/components/CSSReset";
 import Menu from "../src/components/Menu/index.js";
 import { StyledTimeline } from "../src/components/Timeline";
 
@@ -10,7 +9,6 @@ export default function Homepage() {
     const [valorDaBusca, setvalorDaBusca] = React.useState('');
     return (
         <>
-            <CSSReset/>
             <div>
                 <Menu busca={valorDaBusca} setBusca={setvalorDaBusca} />
                 <Header/>
